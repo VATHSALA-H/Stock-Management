@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <!-- Latest compiled and minified CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Latest compiled JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <title>Stock Management System</title>
+</head>
+<body>
+<script>
+     function cancel() {
+        window.location = "/dasboard";
+        }
+</script>
+    <style>
+        body{
+            background-image: url(static/image/sup.jpg);
+            background-size: cover;
+        }
+    </style>
+    
+    <h1 class="text-center">SUPPLIERS INFORMATION</h1>
+    <nav class="navbar navbar-inverse navbar-expand-sm navbar-fixed-top float-end">
+    <button class="btn btn-dark bi bi-person-circle" type="button" data-bs-toggle="modal" data-bs-target="#demo">Add Supplier</button>
+    </nav>
+    <form method="POST">
+    <div id="demo" class="modal">
+
+        <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="text-center">
+            <h1>Supplier Details</h1>
+        </div>
+        <div class="modal-body">
+            <div class="row p-1">
+            <div class="col m-1 p-1 md-4">
+                <div class="row">
+                    <label for="sid"><b>Supplier ID</b></label>
+                    <input type="text" class="form-control" id="sid" placeholder="code" name="sid" required>
+                </div>
+        <div class="row">
+            <label for="sname"><b>Supplier Name</b></label>
+            <input type="text" class="form-control" id="sname" placeholder="name" name="sname" required>
+        </div>
+        <div class="row">
+            <label for="addr"><b>Address</b></label>
+            <input type="text" class="form-control" id="addr" placeholder="address" name="addr" required>
+        </div>
+        <div class="row">
+            <label for="email"><b>Email</b></label>
+            <input type="email" class="form-control" id="email" placeholder="Email" name="email" required>
+        </div>
+        </div>
+        <div class="col m-1 p-1 md-4">
+            <div class="row">
+                <label for="mb"><b>Mobile No.</b></label>
+                <input type="text" class="form-control" id="mb" placeholder="Mobile" name="mb" required>
+            </div>
+            <div class="container">
+                <div>
+                    <label><b>Items</b></label>
+                </div>
+            <select class="form-control" id="vat" name="vat">
+                <option selected disabled>Select Item</option>
+                {% for option in options %}
+                <option>{{ option[0] }}</option>
+                {% endfor %}
+              </select>
+
+            <div class="row">
+                <label for="balance"><b>Balance Payment</b></label>
+                <input type="number" class="form-control" id="balance" placeholder="Amount" name="balance" required>
+            </div>
+            <label name="state"><b>State</b></label>
+            <select class="form-control" id="state" name="state">
+              <option>Active</option>
+              <option>InActive</option>
+            </select>
+               </div>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn-group">
+            <button type="submit" formaction="{{ url_for('supplier') }}" class="btn btn-primary float-start" id="submit" name="SUBMIT">Submit</button>
+            <button type="submit" class="btn btn-danger float-end" id="cancel" name="CANCEL" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+
+        </div>
+    </div>
+    </div>
+    </form>
+<div class="container mt-5">
+  <table class="table table-bordered table-striped">
+     <thead>
+        <tr class="table-info">
+        <th>Supplier ID</th>
+        <th>Supplier Name</th>
+        <th>Address</th>
+        <th>Email</th>
+        <th>Mobile </th>
+        <th>Items</th>
+        <th>Payment</th>
+        <th>State</th>
+            <th>Action</th>
+      </tr>
+     </thead>
+      <tbody>
+      <tr>
+         {% for user in users %}
+      <tr>
+          <td> {{ user[0] }}</td>
+          <td> {{ user[1] }}</td>
+          <td> {{ user[2] }}</td>
+          <td> {{ user[3] }}</td>
+          <td> {{ user[4] }}</td>
+          <td> {{ user[5] }}</td>
+          <td> {{ user[6] }}</td>
+          <td> {{ user[7] }}</td>
+          <td>
+              <a href="/updatesupplier/{{ user[0]}}" class=" btn btn-info btn-sm" data-toggle="modal" data-target="#modaledit{{user[0]}}"><i class="bi-pencil"></i> Edit</a>
+              <a href="/deletesupplier/{{ user[0]}}" onclick="return confirm('Are you Sure You want to delete?')" class="btn btn-danger btn-sm"><i class="bi bi-person-x-fill"></i> Delete</a>
+          </td>
+        </tr>
+      <div id="modaledit{{user[0]}}" class="modal fade" role="dialog">
+               <div class="modal-dialog">
+                   <div class="modal-content">
+                       <div class="modal-header custom-bg">
+                           <h5 class="modal-title text-white" style="align-content: center;">Update Supplier Details</h5>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                           </button>
+                       </div>
+                       <div class="modal-body">
+                           <form action="{{ url_for('updatesupplier', sid=user[0]) }}" method="POST">
+                               <input type="hidden" name="id" value="{{user[0]}}">
+                               <div class="form-group">
+                                   <label>Supplier Id</label>
+                                   <input value="{{user[0]}}" type="text" name="sid" class="form-control" id="code1" placeholder="Enter Supplier ID">
+                               </div>
+                               <div class="form-group">
+                                   <label>Supplier Name</label>
+                                   <input value="{{user[1]}}" type="text" name="sname" class="form-control" id="Input2" placeholder="Enter Name">
+                               </div>
+                               <div class="form-group">
+                                   <label>Address</label>
+                                   <input value="{{user[2]}}" name="addr" type="text" class="form-control" id="Input3" placeholder="Enter address">
+                               </div>
+                               <div class="form-group">
+                                   <label>Email</label>
+                                   <input value="{{user[3]}}" name="email" type="text" class="form-control" id="Input4" placeholder="Enter Email">
+                               </div>
+                               <div class="form-group">
+                                   <label>Mobile</label><input value="{{user[4]}}" name="mb" type="text" class="form-control" id="Input5" placeholder="Enter mobile No.">
+                              </div>
+
+                            <div class="form-group">
+                                <label>Item</label>
+                                <input value="{{user[5]}}" name="vat" type="text" class="form-control" id="Input6" placeholder="Enter Items">
+                              </div>
+
+                            <div class="form-group">
+                                <label>Balance</label>
+                                <input value="{{user[6]}}" name="balance" type="text" class="form-control" id="Input8" placeholder="Enter Balance">
+                              </div>
+
+                            <div class="form-group">
+                                <label>State</label>
+                                <input value="{{user[7]}}" name="state" type="text" class="form-control" id="Input9" placeholder="Enter State">
+                              </div>
+
+                      <div class="row justify-content-center p-1">
+                                 <div class="col-md-6 text-center">
+                                   <button type="submit" class="btn btn-success mt-2" style="width:150px;">Update</button>
+                                 </div>
+                      </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+    </div>
+
+      {% endfor %}
+      </tr>
+      </tbody>
+  </table>
+</div>
+<div class="text-center ">
+    <button type="button" class="btn btn-primary bi bi-box-arrow-in-left" onclick="cancel()">Return</button>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
